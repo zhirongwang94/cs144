@@ -1,6 +1,11 @@
+import java.security.MessageDigest;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 // Java program to calculate SHA hash value
@@ -8,15 +13,12 @@ import java.security.NoSuchAlgorithmException;
 class ComputeSHA {
    public static byte[] getSHA(String input) throws NoSuchAlgorithmException
    {
-      // Static getInstance method is called with hashing SHA
       MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-      // digest() method called
-      // to calculate message digest of an input
-      // and return array of byte
       return md.digest(input.getBytes(StandardCharsets.UTF_8));
    }
    
+
+
    public static String toHexString(byte[] hash)
    {
       // Convert byte array into signum representation
@@ -34,18 +36,39 @@ class ComputeSHA {
       return hexString.toString();
    }
 
-   // Driver code
+
+
    public static void main(String args[])
    {
+      if (args.length !=  1 ){
+         System.out.println("Usage: java ComputeSHA filename.txt\n");
+         return; 
+      }
+
+      Path fileName = Path.of(args[0]);
+
+      String fileContent ="";
+      try {
+         fileContent = Files.readString(fileName);
+      }
+      catch(IOException e) {
+         e.printStackTrace();
+      }
+
+
       try
       {
-         String s2 = "cs144";
-         System.out.println(toHexString(getSHA(s2)));
+         System.out.println(toHexString(getSHA(fileContent)));
+         // boolean check = toHexString(getSHA(fileContent)) == "addb41d9c1ea67ec0d6cc29dbb2f0248a3f077b7aedf6e5d3405fb462e4b955b";
+         // System.out.println(check);
       }
       // For specifying wrong message digest algorithms
       catch (NoSuchAlgorithmException e) {
          System.out.println("Exception thrown for incorrect algorithm: " + e);
       }
+
    }
 }
+
+
 
