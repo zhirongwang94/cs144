@@ -35,7 +35,7 @@ docker cp /Users/zhirongwang/desktop/cs144/project2/src tomcat:/home/cs144/proje
 	docker cp /Users/zhirongwang/desktop/cs144/project2/deploy.sh tomcat:/home/cs144/project2/deploy.sh
 
 	（不断更改，复制）
-	docker cp /Users/zhirongwang/desktop/cs144/project2/src tomcat:/home/cs144/project2/src
+	docker cp /Users/zhirongwang/desktop/cs144/project2/src tomcat:/home/cs144/project2/
 
 
 	2. 
