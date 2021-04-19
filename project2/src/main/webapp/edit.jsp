@@ -11,48 +11,108 @@
     <div><h1>Edit/Create a Post</h1></div>
 
 
-    <form>
-        <div>
-            <p><a href="edit.jsp">Save</a></p>
-            <p><a href="list.jsp">Close</a></p>
-            <p><a href="preview.jsp">Preview</a></p>
-            <p><a href="list.jsp">Delete</a></p>
+    <div>
+         <p><a href="list.jsp">Save</a></p>
+         <p><a href="list.jsp">Close</a></p>
+         <p><a href="preview.jsp">Preview</a></p>
+         <p><a href="list.jsp">Delete</a></p>
+    </div>
 
-        </div>
-
-
-<form action="MyServlet" method="post">
-Post Title:
-<input type="text" name="postTitle" placeholder="enter the title of the post" />
-
-<br>
-Post Title2:
-<input type="text" name="postTitle2" placeholder="enter the title of the post2" />
-
-<br>
-Post Body:
-<textarea style="height: 40rem;" name="postBody"></textarea>
-
-
-<input type="submit" value="ok" />
-
-
-
+<form action = "edit.jsp" method = "POST">
+         First Name: <input type = "text" name = "first_name">
+         <br />
+         Last Name: <input type = "text" name = "last_name" />
+         <input type = "submit" value = "Submit" />
 </form>
+
+<ul>
+         <li><p><b>First Name:</b>
+            <%= request.getParameter("first_name")%>
+         </p></li>
+         <li><p><b>Last  Name:</b>
+            <%= request.getParameter("last_name")%>
+         </p></li>
+</ul>
+
+
+
+<form action="list.jsp" method="GET">
+
+Post Title:<input type="text" name="postTitleName" placeholder="enter the title of the post" id="postTitle" /><br>
+Post Body: <textarea style="height: 40rem;" name="postBody" id="postBody"></textarea>
+
+<button type="submit" value="ok">OK</button>
+</form>
+
+
+
+
+<div id="titleContent">Hello Title</div>
+
+
+
+
+
+<script>
+function myFunction() {
+  String postTitle = request.getParameter("postTitle"); 
+  var y = document.getElementById("postTitle");
+
+  var x = document.getElementById("titleContent");
+  if (y.innerHTML === "enter the title of the post") {
+    x.innerHTML = "You haven't entered title yet";
+  } else {
+    x.innerHTML = "You entered title: " + "add";
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<button type="button" value="save" onclick="myFunction()">Save</button>
+
+<a href="list.jsp">
+   <input type="button" value="Visit List" onclick="myFunction()" />
+</a>
+
+
+<a href="list.jsp">
+   <input type="button" value="Save" />
+</a>
+
+
+
+
+<!-- <a href="http://www.google.com/">
+   <button>Visit Google</button>
+</a> -->
 
 <%
 
-String postTitle = request.getParameter("postTitle"); 
 String postTitle2 = request.getParameter("postTitle2"); 
 String postBody = request.getParameter("postBody"); 
-   
+int myValue = 0 ;  
 
 %>
 
+<script type="text/javascript">
+   myFunction myFunction(){
+      <% 
+      myValue = 19;
+      %>
+   }
 
-<p>Your post title is:  <%= postTitle %>  </p>
-<p>Your post title2 is:  <%= postTitle2 %>  </p>
-<p>Your post body is:  <%= postBody %>  </p>
+</script>
+
+
 
 
 
@@ -121,7 +181,6 @@ String postBody = request.getParameter("postBody");
 
 
 
-    </form>
 
 
 
