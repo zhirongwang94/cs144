@@ -18,99 +18,31 @@
          <p><a href="list.jsp">Delete</a></p>
     </div>
 
-<form action = "edit.jsp" method = "POST">
-         First Name: <input type = "text" name = "first_name">
-         <br />
-         Last Name: <input type = "text" name = "last_name" />
+
+
+
+<form action = "edit.jsp" method = "GET">
+         Post ID   : <input type = "text" name = "postID"><br>
+         Post Title: <input type = "text" name = "title" /><br>
+         Post body : <textarea style="height: 30rem;" name="body" id="body"></textarea><br>
+         <input type="hidden" name="user_name" value="vincent">
          <input type = "submit" value = "Submit" />
 </form>
 
+
 <ul>
-         <li><p><b>First Name:</b>
-            <%= request.getParameter("first_name")%>
-         </p></li>
-         <li><p><b>Last  Name:</b>
-            <%= request.getParameter("last_name")%>
-         </p></li>
+         <li><p><b>POST ID   :</b><%= request.getParameter("postID")%></p></li>
+         <li><p><b>POST TITLE:</b><%= request.getParameter("title")%></p></li>
+         <li><p><b>POST BODY :</b><%= request.getParameter("body")%></p></li>
+         <li><p><b>USERR NAME:</b><%= request.getParameter("user_name")%></p></li>
 </ul>
 
 
 
-<form action="list.jsp" method="GET">
-
-Post Title:<input type="text" name="postTitleName" placeholder="enter the title of the post" id="postTitle" /><br>
-Post Body: <textarea style="height: 40rem;" name="postBody" id="postBody"></textarea>
-
-<button type="submit" value="ok">OK</button>
-</form>
 
 
 
 
-<div id="titleContent">Hello Title</div>
-
-
-
-
-
-<script>
-function myFunction() {
-  String postTitle = request.getParameter("postTitle"); 
-  var y = document.getElementById("postTitle");
-
-  var x = document.getElementById("titleContent");
-  if (y.innerHTML === "enter the title of the post") {
-    x.innerHTML = "You haven't entered title yet";
-  } else {
-    x.innerHTML = "You entered title: " + "add";
-  }
-}
-</script>
-
-
-
-
-
-
-
-
-
-
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<button type="button" value="save" onclick="myFunction()">Save</button>
-
-<a href="list.jsp">
-   <input type="button" value="Visit List" onclick="myFunction()" />
-</a>
-
-
-<a href="list.jsp">
-   <input type="button" value="Save" />
-</a>
-
-
-
-
-<!-- <a href="http://www.google.com/">
-   <button>Visit Google</button>
-</a> -->
-
-<%
-
-String postTitle2 = request.getParameter("postTitle2"); 
-String postBody = request.getParameter("postBody"); 
-int myValue = 0 ;  
-
-%>
-
-<script type="text/javascript">
-   myFunction myFunction(){
-      <% 
-      myValue = 19;
-      %>
-   }
-
-</script>
 
 
 
@@ -120,10 +52,8 @@ int myValue = 0 ;
 
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
    
-
-
-
          <% 
           Connection c = null;
           Statement  s = null; 
@@ -141,25 +71,16 @@ int myValue = 0 ;
          sitting on a connection, and passing one or more of your
          SQL statements (which you ask it to execute) to the DBMS*/
 
-            s = c.createStatement() ;
+            s = c.createStatement();
 
-            s.executeUpdate("DROP TABLE IF EXISTS Sells" ) ;
-            s.executeUpdate("CREATE TABLE Sells(bar VARCHAR(40), beer VARCHAR(40), price REAL)" ) ;
-            s.executeUpdate("INSERT INTO Sells VALUES('Bar Of Foo', 'BudLite', 2.00)") ;
 
-            rs = s.executeQuery("SELECT * FROM Sells") ;
-            while( rs.next() ){
-                 bar = rs.getString("bar");
-                 beer = rs.getString("beer");
-                 price = rs.getFloat("price");
-                 String toPrint = bar + " sells " + beer + " for " + price + " dollars." ;
+            String query_to_insert = "INSERT INTO Posts VALUES(\'" + request.getParameter("user_name") + "\', " + request.getParameter("postID") + ", \'" + request.getParameter("title") + "\', \'" + request.getParameter("body") + "\', \'2000-01-01 00:00:00\' , \'2000-01-01 00:00:00\' );";
 
-                 %>
-                      <h2>Trinying You'll have a luck day!!!s!@</h2>
-                      <p>(<%= toPrint %>)</p>
 
-                 <%
-            }
+            s.executeUpdate(query_to_insert) ;
+
+
+
 
         } catch (SQLException ex){
             System.out.println("SQLException caught");

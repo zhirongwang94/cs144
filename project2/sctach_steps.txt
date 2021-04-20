@@ -47,5 +47,11 @@ docker cp /Users/zhirongwang/desktop/cs144/project2/src tomcat:/home/cs144/proje
 	（在 ～/project2/ 上）
 	cp build/libs/editor.war $CATALINA_BASE/webapps
 	
-	
+
+
+http://oak.cs.ucla.edu/editor/post?username=junghoo&postid=0&action=open
+
+http://localhost:8888/editor/edit.jsp	
+
+http://localhost:8888/editor/edit.jsp/post?username=junghoo
 
