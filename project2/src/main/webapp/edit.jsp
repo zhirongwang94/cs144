@@ -26,7 +26,7 @@
          Post Title: <input type = "text" name = "title" /><br>
          Post body : <textarea style="height: 30rem;" name="body" id="body"></textarea><br>
          <input type="hidden" name="user_name" value="vincent">
-         <input type = "submit" value = "Submit" />
+         <input type = "submit" value = "Save" />
 </form>
 
 
@@ -51,9 +51,7 @@
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-   
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>   
          <% 
           Connection c = null;
           Statement  s = null; 
@@ -76,6 +74,9 @@
 
             String query_to_insert = "INSERT INTO Posts VALUES(\'" + request.getParameter("user_name") + "\', " + request.getParameter("postID") + ", \'" + request.getParameter("title") + "\', \'" + request.getParameter("body") + "\', \'2000-01-01 00:00:00\' , \'2000-01-01 00:00:00\' );";
 
+            %>
+                <p> query_to_insert <%= query_to_insert %> <p>
+            <%
 
             s.executeUpdate(query_to_insert) ;
 
@@ -83,13 +84,17 @@
 
 
         } catch (SQLException ex){
-            System.out.println("SQLException caught");
-            System.out.println("---");
+            String catchError = "SQLException caught" + "\n---" ;
+            %>
+                <p> <%= catchError %> <p>
+               
+               <%
             while ( ex != null ) {
-                System.out.println("Message   : " + ex.getMessage());
-                System.out.println("SQLState  : " + ex.getSQLState());
-                System.out.println("ErrorCode : " + ex.getErrorCode());
-                System.out.println("---");
+               String errorMessage = "Message   : " + ex.getMessage() +  "\nSQLState  : " + ex.getSQLState() + "\nErrorCode : " + ex.getErrorCode() +  " \n---"; 
+               %>
+                <p> <%= errorMessage %> <p>
+               
+               <%
                 ex = ex.getNextException();
             }
         } finally {
