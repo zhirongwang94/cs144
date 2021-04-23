@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><!DOCTYPE html>
 <%@ page import="java.sql.*" %>
+
 <%@ page import = "java.io.*,java.util.*" %>
 
 
@@ -20,13 +21,6 @@
          <a href="list.jsp">Delete</a>
     </div>
 
-<script type="text/javascript">
-    function  test(){
-        document.forms[0].action = 'list.jsp';
-    }
-
-</script>>
-
 <form action="edit.jsp" method = "GET">
      Post ID   : <input type = "text" name = "postID"><br>
      Post Title: <input type = "text" name = "title" /><br>
@@ -45,7 +39,12 @@
          <li><p><b>USERR NAME  qq:</b><%= request.getParameter("user_name")%></p></li>
 </ul>
 
+<%
 
+        Connection c = null;
+        Statement  s = null; 
+        ResultSet rs = null; 
+%>
 
 
 
@@ -60,59 +59,26 @@
 
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>   
-         <% 
-          Connection c = null;
-          Statement  s = null; 
-          ResultSet rs = null; 
-
-
-        try {
-            String bar, beer ;
-            float price ;
+<script type="text/javascript">
+    function  test(){
+        document.forms[0].action = 'edit.jsp';
     
-            /* create an instance of a Connection object */
-            c = DriverManager.getConnection("jdbc:mariadb://localhost:3306/CS144", "cs144", ""); 
-         
-         /* You can think of a JDBC Statement object as a channel
-         sitting on a connection, and passing one or more of your
-         SQL statements (which you ask it to execute) to the DBMS*/
-
-            s = c.createStatement();
 
 
-            String query_to_insert = "INSERT INTO Posts VALUES(\'" + request.getParameter("user_name") + "\', " + request.getParameter("postID") + ", \'" + request.getParameter("title") + "\', \'" + request.getParameter("body") + "\', \'2000-01-01 00:00:00\' , \'2000-01-01 00:00:00\' );";
+        // let user_name = "<%=request.getParameter("user_name")%>";
+        // let postID = "<%=request.getParameter("postID")%>";
+        // let title = "<%=request.getParameter("title")%>";
+        // let body = "<%=request.getParameter("body")%>";
 
-            %>
-                <p> query_to_insert <%= query_to_insert %> <p>
-            <%
+        let query_to_insert = "INSERT INTO Posts VALUES(\'" + "<%=request.getParameter("user_name")%>" + "\', " + "<%=request.getParameter("postID")%>" + ", \'" + "<%=request.getParameter("title")%>" + "\', \'" + "<%=request.getParameter("body")%>" + "\', \'2000-01-01 00:00:00\' , \'2000-01-01 00:00:00\' );";
 
-            s.executeUpdate(query_to_insert) ;
+            
+        // System.out.println("Your query i: " + query_to_insert);
+        document.write(query_to_insert);
+            
+    }
 
-
-
-
-        } catch (SQLException ex){
-            String catchError = "SQLException caught" + "\n---" ;
-            %>
-                <p> <%= catchError %> <p>
-               
-               <%
-            while ( ex != null ) {
-               String errorMessage = "Message   : " + ex.getMessage() +  "\nSQLState  : " + ex.getSQLState() + "\nErrorCode : " + ex.getErrorCode() +  " \n---"; 
-               %>
-                <p> <%= errorMessage %> <p>
-               
-               <%
-                ex = ex.getNextException();
-            }
-        } finally {
-            try { rs.close(); } catch (Exception e) { /* ignored */ }
-            try { s.close(); } catch (Exception e) { /* ignored */ }
-            try { c.close(); } catch (Exception e) { /* ignored */ }
-        }
-
-          %>
-
+</script>
 
 
 
