@@ -5,6 +5,7 @@
         <servlet-name>Editor</servlet-name>
         <servlet-class>Editor</servlet-class>
     </servlet>
+    
     <servlet-mapping>
         <servlet-name>Editor</servlet-name>
         <url-pattern>/post</url-pattern>

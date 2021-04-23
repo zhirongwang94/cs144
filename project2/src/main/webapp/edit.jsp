@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><!DOCTYPE html>
 <%@ page import="java.sql.*" %>
+<%@ page import = "java.io.*,java.util.*" %>
+
 
 <html>
 <head>
@@ -12,21 +14,27 @@
 
 
     <div>
-         <p><a href="list.jsp">Save</a></p>
-         <p><a href="list.jsp">Close</a></p>
-         <p><a href="preview.jsp">Preview</a></p>
-         <p><a href="list.jsp">Delete</a></p>
+         <a href="list.jsp">Save</a>
+         <a href="list.jsp">Close</a>
+         <a href="preview.jsp">Preview</a>
+         <a href="list.jsp">Delete</a>
     </div>
 
+<script type="text/javascript">
+    function  test(){
+        document.forms[0].action = 'list.jsp';
+    }
 
+</script>>
 
+<form action="edit.jsp" method = "GET">
+     Post ID   : <input type = "text" name = "postID"><br>
+     Post Title: <input type = "text" name = "title" /><br>
+     Post body : <textarea style="height: 30rem;" name="body" id="body"></textarea><br>
+     <input type="hidden" name="user_name" value="vincent">
 
-<form action = "edit.jsp" method = "GET">
-         Post ID   : <input type = "text" name = "postID"><br>
-         Post Title: <input type = "text" name = "title" /><br>
-         Post body : <textarea style="height: 30rem;" name="body" id="body"></textarea><br>
-         <input type="hidden" name="user_name" value="vincent">
-         <input type = "submit" value = "Save" />
+     <input type = "submit" value = "Save" onclick="test();" />
+
 </form>
 
 
@@ -34,7 +42,7 @@
          <li><p><b>POST ID   :</b><%= request.getParameter("postID")%></p></li>
          <li><p><b>POST TITLE:</b><%= request.getParameter("title")%></p></li>
          <li><p><b>POST BODY :</b><%= request.getParameter("body")%></p></li>
-         <li><p><b>USERR NAME:</b><%= request.getParameter("user_name")%></p></li>
+         <li><p><b>USERR NAME  qq:</b><%= request.getParameter("user_name")%></p></li>
 </ul>
 
 

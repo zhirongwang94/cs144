@@ -46,6 +46,8 @@ The list page should also contain a “new post” button to allow users to crea
             String toPrint = title + ",   " + created + ",   " + modified;
              %>
                 <p> <%= toPrint %> <p>
+                <a href="edit.jsp">Open</a>    
+                <a href="edit.jsp">Delete</a>    
              <%
         }
 
