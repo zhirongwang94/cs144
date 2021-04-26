@@ -17,7 +17,7 @@ The list page should also contain a “new post” button to allow users to crea
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Post Lists </title>
+    <title>Post Listsssss </title>
 </head>
 
 <body>
@@ -40,14 +40,25 @@ The list page should also contain a “new post” button to allow users to crea
 
         while( rs.next() ){
             String title = rs.getString("title");
+            String username = rs.getString("username");
+            String postID = rs.getString("postid");
+            String body = rs.getString("body");
             String created = rs.getString("created");
             String modified = rs.getString("modified");
-
             String toPrint = title + ",   " + created + ",   " + modified;
              %>
                 <p> <%= toPrint %> <p>
-                <a href="edit.jsp">Open</a>    
-                <a href="edit.jsp">Delete</a>    
+
+        <form action="loginPage" method="POST">
+        <div>
+            <button type="submit" name="openButton"    value="open" >Open</button>
+            <button type="submit" name="deleteButton"  value="delete" >Delete</button>
+            <input  type="hidden" id="title" name="title" value="<%=title%>"> 
+            <input  type="hidden" id="postID" name="postID" value="<%=postID%>"> 
+            <input  type="hidden" id="body" name="body" value="<%=body%>"> 
+            <input  type="hidden" id="username"  name="username"  value="<%=username%>">    
+        </div>
+    </form>
              <%
         }
 
