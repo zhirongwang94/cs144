@@ -3,6 +3,10 @@ import java.io.*;
 import javax.servlet.*;  
 import javax.servlet.http.*;  
 import java.sql.*;    
+import java.util.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 public class Validation extends HttpServlet 
 {    
    public void doPost(HttpServletRequest request, 
@@ -14,6 +18,7 @@ public class Validation extends HttpServlet
 
        String redirectPage = "list.jsp";
        String query = "";
+       String modifyTimeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
        String title=request.getParameter("title");      
        String body=request.getParameter("body");       
@@ -29,20 +34,22 @@ public class Validation extends HttpServlet
 
 
 
-
-       String query_to_insert = "INSERT INTO Posts VALUES(\'" + username + "\', " + postID + ", \'" + title + "\', \'" + body + "\', \'2000-01-01 00:00:00\' , \'2000-01-01 00:00:00\' );";
+       String query_to_insert = "INSERT INTO Posts VALUES(\'" + username + "\', " + postID + ", \'" + title + "\', \'" + body + "\', \'" +modifyTimeStamp+ "\' , \'2000-01-01 00:00:00\' );";
        String query_to_delete = "DELETE FROM Posts WHERE postid=" +postID+ " AND username=\"" +username+ "\"";
-
-       if(deleteButton != null){
-          query = query_to_delete;
-       }
-       else if(saveButton != null){
-          query = query_to_insert;
-       }
+       String query_to_update = "UPDATE Posts SET body=\"" + body + "\" WHERE username=\"" +username+ "\" AND postID=" +postID;
+       String query_to_check = "SELECT * FROM Posts WHERE username=\"" + username+ "\" AND postID=" +postID;
 
 
-       if(openButton != null){
-          redirectPage = "edit.jsp";
+       if (deleteButton != null){
+        redirectPage = "list.jsp";
+       }else if(saveButton != null){
+        redirectPage ="list.jsp";
+       }else if(previewButton !=null){
+        redirectPage = "previewButton";
+       }else if(openButton != null){
+        redirectPage = "edit.jsp";
+       }else{
+        redirectPage = "list.jsp";
        }
      
        pwriter.println("YOUR title:  "+title+"\n");
@@ -56,13 +63,13 @@ public class Validation extends HttpServlet
        pwriter.println("saveButton:  " + saveButton);
        pwriter.println("openButton:  " + openButton);
 
-       pwriter.println("query:  " + query);
+       pwriter.println("query:  " + query_to_insert);
+       pwriter.println("query:  " + query_to_update);
+       pwriter.println("query:  " + query_to_delete);
+
 
 
 // DELETE FROM Posts WHERE postid=18 AND username="user_ACHERW";
-
-
-
 
 
         Connection c = null;
@@ -74,7 +81,29 @@ public class Validation extends HttpServlet
             /* create an instance of a Connection object */
             c = DriverManager.getConnection("jdbc:mariadb://localhost:3306/CS144", "cs144", ""); 
             s = c.createStatement() ;
-            s.executeUpdate(query) ;
+
+            String bar = ""; 
+            String foo = ""; 
+            rs = s.executeQuery(query_to_check);  
+            while( rs.next() ){
+                 bar = rs.getString("username");
+                 foo = rs.getString("postid");
+            }
+
+            boolean postAlreadyExist = false; 
+            if (bar != "" && foo != ""){
+              postAlreadyExist = true; 
+            }
+
+            if(deleteButton != null){
+              query = query_to_delete;
+            }else if(postAlreadyExist){
+               query = query_to_update;
+            }else{
+              query = query_to_insert;
+            }
+            s.executeUpdate(query);
+
 
         } catch (SQLException ex){
             pwriter.println("SQLException caught");

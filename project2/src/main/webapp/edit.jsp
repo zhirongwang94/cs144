@@ -25,6 +25,7 @@
        String body=request.getParameter("body");       
        String postID=request.getParameter("postID");
        String username=request.getParameter("username");
+       String openButton=request.getParameter("openButton"); 
 %>
 
 <body>
@@ -38,7 +39,8 @@
             <button type="submit" name="closeButton"   value="close" onclick="goToListPage()">Close</button>
             <button type="submit" name="previewButton" value="preview" onclick="goToPreviewPage()">Preview</button>
             <button type="submit" name="deleteButton"  value="delete" >Delete</button>
-            <input  type="hidden" id="username"  name="username"  value="<%=username%>">    
+            <input  type="hidden" id="username"  name="username"  value="<%=username%>">  
+            <input  type="hidden" id="openButton"  name="openButton"  value="<%=openButton%>">    
             
         </div>
 

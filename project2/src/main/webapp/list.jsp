@@ -56,7 +56,8 @@ The list page should also contain a “new post” button to allow users to crea
             <input  type="hidden" id="title" name="title" value="<%=title%>"> 
             <input  type="hidden" id="postID" name="postID" value="<%=postID%>"> 
             <input  type="hidden" id="body" name="body" value="<%=body%>"> 
-            <input  type="hidden" id="username"  name="username"  value="<%=username%>">    
+            <input  type="hidden" id="username"  name="username"  value="<%=username%>"> 
+            <input  type="hidden" id="created"   name="created"  value="<%=created%>">    
         </div>
     </form>
              <%
