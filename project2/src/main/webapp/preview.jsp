@@ -16,6 +16,9 @@
        String postID=request.getParameter("postID");
        String username=request.getParameter("username");
 
+       if(body == null || body.equal("null")){
+            body = "";
+       }
        String[] lines = body.split("\n");
        int size = lines.length;
 %>
@@ -28,7 +31,6 @@
         <input  type="hidden" id="body" name="body" value="<%=body%>"> 
         <input  type="hidden" id="username"  name="username"  value="<%=username%>">    
     </form>
-
 <br>
 
 

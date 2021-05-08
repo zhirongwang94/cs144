@@ -17,16 +17,22 @@ The list page should also contain a “new post” button to allow users to crea
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Post Listsssss </title>
+    <title>Post Listsssssssssssss </title>
 </head>
 
+<%
+       String username=request.getParameter("username");
+%>
 <body>
     <div><h1>Home Page</h1></div>
-    <div><p><a href="edit.jsp">New Post</a></p></div>
+    <div><p><a href="post">New Post</a></p></div>
     <h2>Title  Created  Modified  </h2>
 
 
-
+        <form action="list.jsp" method="POST">
+            <label for="username">Username</label>
+            <input id="username"  name="username"  value="<%=username%>"> 
+        </form>
 <!-- title, creation, and modification dates of the post -->
 
 <%
@@ -40,26 +46,31 @@ The list page should also contain a “new post” button to allow users to crea
 
         while( rs.next() ){
             String title = rs.getString("title");
-            String username = rs.getString("username");
-            String postID = rs.getString("postid");
+            String username_this_row = rs.getString("username");
+            String postid = rs.getString("postid");
             String body = rs.getString("body");
             String created = rs.getString("created");
             String modified = rs.getString("modified");
             String toPrint = title + ",   " + created + ",   " + modified;
+            
+            if(!username.equals(username_this_row)){
+                continue; 
+            }
+
              %>
                 <p> <%= toPrint %> <p>
 
         <form action="loginPage" method="POST">
-        <div>
-            <button type="submit" name="openButton"    value="open" >Open</button>
-            <button type="submit" name="deleteButton"  value="delete" >Delete</button>
-            <input  type="hidden" id="title" name="title" value="<%=title%>"> 
-            <input  type="hidden" id="postID" name="postID" value="<%=postID%>"> 
-            <input  type="hidden" id="body" name="body" value="<%=body%>"> 
-            <input  type="hidden" id="username"  name="username"  value="<%=username%>"> 
-            <input  type="hidden" id="created"   name="created"  value="<%=created%>">    
-        </div>
-    </form>
+            <div>
+                <button type="submit" name="action"    value="open" >Open</button>
+                <button type="submit" name="action"  value="delete" >Delete</button>
+                <input  type="hidden" id="title" name="title" value="<%=title%>"> 
+                <input  type="hidden" id="postid" name="postid" value="<%=postid%>"> 
+                <input  type="hidden" id="body" name="body" value="<%=body%>"> 
+                <input  type="hidden" id="username"  name="username"  value="<%=username%>"> 
+                <input  type="hidden" id="created"   name="created"  value="<%=created%>">    
+            </div>
+        </form>
              <%
         }
 
