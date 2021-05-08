@@ -1,87 +1,33 @@
 var express = require('express');
 var router = express.Router();
+let client = require('../db');
+const commonmark = require('commonmark');
 
-// const MongoClient = require('mongodb').MongoClient;
-// const options = { useUnifiedTopology: true, writeConcern: { j: true } };
+const reader = new commonmark.Parser();
+const writer = new commonmark.HtmlRenderer();
 
-// // connection URL
-// const url = 'mongodb://localhost:27017';
-
-// // create a new MongoClient
-// const client = new MongoClient(url, options);
-
-
-// let db_posts = "";
-// client.connect((err) => {
-//     const posts = client.db('BlogServer').collection('Posts');
-// 	posts.find().toArray((err, docs) => {
-//     console.log(docs);
-//     db_posts = docs;
-//     client.close();
-//     });
-// });
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.send("hello from index");
+router.get('/', (req, res) => {
+    let db_posts = client.db('BlogServer').collection('Posts');
+    db_posts.find({username: "cs144"}).then((post) => {
+    	if(post==null){
+    		res.status(404); 
+    		res.send("No Post Found");
+    	}
+    	else{
+    		res.status(200);
+    		post.title = writer.render(reader.parse(post.title));
+    		post.body = writer.render(reader.parse(post.body));
+    		const posts = [post];
+    		res.render('indexx', {posts: posts});
+    	}
+        // res.json(docs);
+        // res.send("username: " + req.params.username);
+        // res.render('indexx',doc[0]);
+        // res.send("hello from index");
+    });
 });
 
 
 module.exports = router;
-
-
-////
-
-
-// let db_posts = "";
-// let user_posts = "";
-
-
-// // create a new MongoClient
-// const client = new MongoClient(url, options);
-// // let username = req.params.username;
-
-
-// client.connect((err) => {
-//     // obtain dogs collection in animals db
-//     const posts = client.db('BlogServer').collection('Posts');
-// 	// users.find({ breed: 'poodle' }).toArray((err, docs) => {
-// 	posts.find().toArray((err, docs) => {
-//     // print retrieved document in console
-//     console.log(docs[0]);
-//     db_posts = docs;
-//     client.close();
-//     });
-// });
-
-
-// var myJSON = JSON.stringify(db_posts);
-
-// // -------- app.js ---------
-// let express = require('express');
-// let app = express();
-
-
-// app.get('/', (req, res, next) => {
-//     res.send('Hello World!');
-// });
-
-// app.get('/blog', (req, res, next) => {
-//     // res.send('Here are all posts: ' + db_posts);
-//     // res.json(db_posts);
-//     res.send("Here are all posts: " + db_posts);
-// });
-
-// app.get('/blog/:username', (req, res, next) => {
-// 	// res.send("Here is " + req.params.username + "\'s blogs:  " + db_posts);
-// 	// res.json(user_posts);
-// 	// res.render('index', {title: "Hello"})
-// 	// res.render(db_posts)
-
-// });
-
-// app.get('/blog/:username/:postid', (req, res, next) => {
-//     res.send("Here is " + req.params.username + "\'s "+ req.params.postid + "th blogs:  ");
-// });
-
-// app.listen(3000);
