@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 var bodyParser = require('body-parser')
 const commonmark = require('commonmark');
 
+
 const reader = new commonmark.Parser();
 const writer = new commonmark.HtmlRenderer();
 
@@ -69,6 +70,7 @@ router.post('/', function(req, res, next) {
 			console.log("hash:" + hash);
 			if(passwordIsCorrect){
 				console.log("password is correct");
+				jwt.sign({data: req.body.username}, jwt_key, { expiresIn: '2h' });
 			}
 			else{
 				console.log("Wrong password");
@@ -86,22 +88,22 @@ router.post('/', function(req, res, next) {
 
 });
 
-// router.get('/:username/:postid', (req, res) => {
-//     let db_posts = client.db('BlogServer').collection('Posts');
-//     db_posts.findOne({username: req.params.username, postid: parseInt(req.params.postid)}).then((post) => {
-//     	if(post==null){
-//     		res.status(404); 
-//     		res.send("No Post Found");
-//     	}
-//     	else{
-//     		res.status(200);
-//     		post.title = writer.render(reader.parse(post.title));
-//     		post.body = writer.render(reader.parse(post.body));
-//     		const posts = [post];
-//     		res.render('post', {posts: posts});
-//     	}
-//     });
-// });
+
 
 module.exports = router;
+
+
+
+// {
+//   "alg": "HS256",
+//   "typ": "JWT"
+// }
+
+
+// {
+//   "exp": expiration,
+//   "usr": "username"
+// }
+
+
 
