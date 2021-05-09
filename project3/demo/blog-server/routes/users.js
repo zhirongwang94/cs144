@@ -26,13 +26,19 @@ let client = require('../db');
 
 
 /* GET home page. */
-router.get('/:username', (req, res) => {
+router.get('/', (req, res) => {
     let db_posts = client.db('BlogServer').collection('Posts');
     db_posts.find({username: req.params.username}).toArray((err, docs) => {
-        res.json(docs);
-        // res.send("username: " + req.params.username);
+        res.send("Hello from user page, you can add username");
     });
 });
 
+/* GET home page. */
+router.get('/:username', (req, res) => {
+    let db_posts = client.db('BlogServer').collection('Posts');
+    db_posts.find({username: req.params.username}).toArray((err, docs) => {
+        res.json(docs)
+    });
+});
 
 module.exports = router;
