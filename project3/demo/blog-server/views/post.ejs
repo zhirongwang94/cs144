@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-
-  </head>
+  <head></head>
+  <p><big><big><big><big>Displaying Post(s): </big></big></big></big></p>
   <body>
-  	<% for (let post of posts) { %>
-  		<li> <%= post.title %> </li>
-  		<li> <%= post.body %> </li>
+  	<% %>
+  	
+
+  	<% for (let i = parseInt(start); i < parseInt(end); i++) { %>
+  		<% post = posts[i] %>
+  		
+  		<%- post.title %> 
+  		<%- post.body %> 
+  		<b> Date Created: </b> <%- post.created %>
+  		<b> Date Modifed: </b> <%- post.modified %> 
+  		<hr>
+  		
   	<% } %>
+
+
+  	<a id="next_link" href=<%= next %> >next</a>
+
   </body>
 </html>
 

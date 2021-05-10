@@ -10,7 +10,58 @@ const writer = new commonmark.HtmlRenderer();
 router.get('/:username', (req, res) => {
     let db_posts = client.db('BlogServer').collection('Posts');
     db_posts.find({username: req.params.username}).toArray((err, docs) => {
-        res.json(docs);
+        console.dir(docs);
+        // res.json(docs);  
+        var posts = [];
+        for (const post of docs){
+            console.log("hello from blog.js");
+            console.dir(post);
+            res.status(200);
+
+            var created = new Date();
+            created.setTime(parseInt(post.created))
+            created_string = created.toUTCString()
+
+            var modified = new Date();
+            modified.setTime(parseInt(post.created))
+            modified_string = created.toUTCString()
+
+            post.title = writer.render(reader.parse(post.title));
+            post.body = writer.render(reader.parse(post.body));
+            post.username = writer.render(reader.parse(post.username));
+            post.postid = writer.render(reader.parse(String(post.postid)));
+            post.modified = writer.render(reader.parse(modified_string));
+            post.created = writer.render(reader.parse(created_string));
+
+            posts.push(post);
+        }
+
+        let length = posts.length;
+
+        let start = 0; 
+        if(req.query.start && parseInt(req.query.start) > 0 ){
+            start = Math.min(req.query.start, posts.length);
+        }
+
+        let next = './';
+        if ( parseInt(start)+5 < posts.length ){
+            next = './' +'?start=' + String(parseInt(start) + 5);
+        }
+        else{
+            next = './' +'?start=' + String(parseInt(start));
+        }
+
+        
+        let end = Math.min(start+10, posts.length); 
+
+        console.log("start: " + start + " end: " + end );
+
+        res.render('post', 
+            {posts: posts,
+             start: start, 
+             next: next,
+             end: end,
+        });
         // res.send("username: " + req.params.username);
     });
 });
@@ -33,11 +84,40 @@ router.get('/:username/:postid', (req, res) => {
     		res.send("No Post Found");
     	}
     	else{
+            console.log("hello from blog.js");
+            // console.dir(post);
     		res.status(200);
+            
+            var created = new Date();
+            created.setTime(parseInt(post.created))
+            created_string = created.toUTCString()
+
+            var modified = new Date();
+            modified.setTime(parseInt(post.created))
+            modified_string = created.toUTCString()
+
+            console.log(created_string);
+
     		post.title = writer.render(reader.parse(post.title));
     		post.body = writer.render(reader.parse(post.body));
+            post.username = writer.render(reader.parse(post.username));
+            post.postid = writer.render(reader.parse(String(post.postid)));
+            post.modified = writer.render(reader.parse(modified_string));
+            post.created = writer.render(reader.parse(created_string));
+
     		const posts = [post];
-    		res.render('post', {posts: posts});
+
+            let start = 0; 
+            if(req.query.start){start = req.query.start;}
+
+            let next = './' +'?start=' + String(start + 1);
+
+            console.log("start : " + start);
+    		res.render('post', 
+                {posts: posts,
+                start: req.query, 
+                next: next,
+            });
     	}
     });
 });
