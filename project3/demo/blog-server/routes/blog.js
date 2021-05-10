@@ -8,6 +8,11 @@ const writer = new commonmark.HtmlRenderer();
 
 /* GET home page. */
 router.get('/:username', (req, res) => {
+    if(!req.params.username){
+        res.status(404); // unfound
+        res.send(":username is missing");
+        console.log(":username is missing");
+    }
     let db_posts = client.db('BlogServer').collection('Posts');
     db_posts.find({username: req.params.username}).toArray((err, docs) => {
         console.dir(docs);
@@ -43,6 +48,8 @@ router.get('/:username', (req, res) => {
             start = Math.min(req.query.start, posts.length);
         }
 
+        let end = Math.min(start+10, posts.length); 
+
         let next = './';
         if ( parseInt(start)+5 < posts.length ){
             next = './' +'?start=' + String(parseInt(start) + 5);
@@ -52,8 +59,7 @@ router.get('/:username', (req, res) => {
         }
 
         
-        let end = Math.min(start+10, posts.length); 
-
+        
         console.log("start: " + start + " end: " + end );
 
         res.render('post', 
@@ -107,15 +113,18 @@ router.get('/:username/:postid', (req, res) => {
 
     		const posts = [post];
 
+
+            //
             let start = 0; 
-            if(req.query.start){start = req.query.start;}
+            let end = 1;
+            let next = './' + req.params.postid;
 
-            let next = './' +'?start=' + String(start + 1);
+            console.log("start: " + start + " end: " + end );
 
-            console.log("start : " + start);
     		res.render('post', 
                 {posts: posts,
-                start: req.query, 
+                start: start,
+                end: end,  
                 next: next,
             });
     	}

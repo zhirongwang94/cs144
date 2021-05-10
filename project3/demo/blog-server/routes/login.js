@@ -9,7 +9,7 @@ const commonmark = require('commonmark');
 const reader = new commonmark.Parser();
 const writer = new commonmark.HtmlRenderer();
 
-const jwt = require('jsonwebtoken');
+const jwt_token = require('jsonwebtoken');
 const jwt_key='C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c';
 
 
@@ -23,38 +23,48 @@ const jwt_key='C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c';
 // console.log("result:" + result);
 
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  console.log("username: " + req.body.username);
+  console.log("password: " + req.body.password);
+  console.log("redirect: " + req.body.redirect);
+
+
   res.sendFile('login.html', { root: '.' });
 });
 
 router.post('/', function(req, res, next) {
 
-
+  console.log("post username: " + req.body.username);
+  console.log("post password: " + req.body.password);
+  console.log("post redirect: " + req.body.redirect);
 // TODO, 
   if(!req.body.username || !req.body.password){
   	res.status(404); 
-	res.send("username or password is undefined");
+	  res.send("username or password is undefined");
 	// res.end("yes");
   }
   else if(req.body.username === "" || req.body.password === ""){	
   	res.status(404); 
 	res.send("username or password is empty string");
   }
-  else if(req.body.password === "gotogoogle"){
-  	res.status(200); 
-	// generateToken(res, req.body.username);
-  	res.redirect("https://www.google.com"); // this works
+ //  else if(req.body.password === "gotogoogle"){
+ //  	res.status(200); 
+	// // generateToken(res, req.body.username);
+ //  	// res.redirect("https://www.google.com"); // this works
 
-  }
+ //  }
   else{
   	res.status(200); 
 
     let db_users = client.db('BlogServer').collection('Users');
     db_users.findOne({username: req.body.username}).then((user) => {
         if(user==null){
-        	res.status(404);
-        	res.send("No user found");
+        	res.status(401); //Unauthorized
+        	// res.send("No user found");
+          console.log("No user found")
+          res.sendFile('login.html', { root: '.' });
         }
 
         else{
@@ -66,28 +76,38 @@ router.post('/', function(req, res, next) {
 
         	var salt = bcrypt.genSaltSync(10);
 
-			var passwordIsCorrect = bcrypt.compareSync(req.body.password, hash);
+			    var passwordIsCorrect = bcrypt.compareSync(req.body.password, hash);
 
-			console.log("hash:" + hash);
-			if(passwordIsCorrect){
-				console.log("password is correct");
-				// jwt.sign({data: req.body.username}, jwt_key, { expiresIn: '2h' });
-				// generateToken(res, req.body.username);
+			    console.log("hash:" + hash);
+
+			    if(passwordIsCorrect){
+				      console.log("password is correct");
+				      // jwt.sign({data: req.body.username}, jwt_key, { expiresIn: '2h' });
+				      // generateToken(res, req.body.username);
 		        
-		      const jwt_token = jwt.sign({username: req.body.username}, jwt_key, {expiresIn: '2h'});
-			    console.log("jwt_token: " + jwt_token);
-          res.cookie('jwt_token', jwt_token, {
-			  		 expires: new Date(Date.now() + '2h'),
-			  		// secure: true,
-			  	});
+		          const jwt = jwt_token.sign({username: req.body.username}, jwt_key, {expiresIn: '2h'});
+			        console.log("jwt: " + jwt);
+              res.cookie('jwt', jwt, {expires: new Date(Date.now() + '2h'),	});
 
 		        // res.cookie('cookiename', 'cookievalue1', { maxAge: 900000, httpOnly: true });
 				    // console.log("Your cookie: " + req.cookies['cookiename']);
-			}
-			else{
-				console.log("Wrong password");
-			}
-        	res.send(user.username + user.password);
+			    }
+
+          // password is not correct
+			    else{
+            res.status(401);
+            console.log("No user found")
+            // res.sendFile('login.html', { root: '.' });
+			    }
+
+          if (!req.body.redirect){
+            console.log("redirect: " + req.body.redirect);
+            res.send(req.body.username);
+          }
+          else{
+            // res.sendFile('login.html', { root: '.' });
+            res.redirect(req.body.redirect);
+          }
         }
 
     });

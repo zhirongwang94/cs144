@@ -6,17 +6,17 @@ function auth(req, res, next){
 	console.log("hello from auth.js");
 
 	//now i can access the token 
-	let jwt_token = req.cookies['jwt_token'];
+	let jwt_cookie = req.cookies['jwt'];
 	let username = req.query.username; 
 	
 	// invalid token - synchronous
 	try {
-	  var payload = jwt.verify(jwt_token, jwt_key);
+	  var payload = jwt.verify(jwt_cookie, jwt_key);
 	} catch(err) {
 	  console.log("invalid token");
 	}
 
-	console.log("auth Your cookie: " + jwt_token);
+	console.log("auth Your cookie: " + jwt);
 	console.log("username : " + username);
 	console.log("payload.username: " + payload.username);
 
