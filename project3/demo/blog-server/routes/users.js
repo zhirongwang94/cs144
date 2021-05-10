@@ -29,8 +29,10 @@ let client = require('../db');
 router.get('/', (req, res) => {
     let db_posts = client.db('BlogServer').collection('Posts');
     db_posts.find({username: req.params.username}).toArray((err, docs) => {
+  		console.log("Your cookie: " + req.cookies['cookiename']);
         res.send("Hello from user page, you can add username");
     });
+
 });
 
 /* GET home page. */

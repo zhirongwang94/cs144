@@ -4,7 +4,7 @@ let client = require('../db');
 const bcrypt = require('bcryptjs');
 var bodyParser = require('body-parser')
 const commonmark = require('commonmark');
-
+// const generateToken = require('./generateToken');
 
 const reader = new commonmark.Parser();
 const writer = new commonmark.HtmlRenderer();
@@ -25,9 +25,8 @@ const jwt_key='C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.sendfile("login.html");  
+  res.sendFile('login.html', { root: '.' });
 });
-
 
 router.post('/', function(req, res, next) {
 
@@ -44,7 +43,9 @@ router.post('/', function(req, res, next) {
   }
   else if(req.body.password === "gotogoogle"){
   	res.status(200); 
+	// generateToken(res, req.body.username);
   	res.redirect("https://www.google.com"); // this works
+
   }
   else{
   	res.status(200); 
@@ -70,13 +71,23 @@ router.post('/', function(req, res, next) {
 			console.log("hash:" + hash);
 			if(passwordIsCorrect){
 				console.log("password is correct");
-				jwt.sign({data: req.body.username}, jwt_key, { expiresIn: '2h' });
+				// jwt.sign({data: req.body.username}, jwt_key, { expiresIn: '2h' });
+				// generateToken(res, req.body.username);
+		        
+		      const jwt_token = jwt.sign({username: req.body.username}, jwt_key, {expiresIn: '2h'});
+			    console.log("jwt_token: " + jwt_token);
+          res.cookie('jwt_token', jwt_token, {
+			  		 expires: new Date(Date.now() + '2h'),
+			  		// secure: true,
+			  	});
+
+		        // res.cookie('cookiename', 'cookievalue1', { maxAge: 900000, httpOnly: true });
+				    // console.log("Your cookie: " + req.cookies['cookiename']);
 			}
 			else{
 				console.log("Wrong password");
 			}
         	res.send(user.username + user.password);
-
         }
 
     });
@@ -87,7 +98,6 @@ router.post('/', function(req, res, next) {
 
 
 });
-
 
 
 module.exports = router;

@@ -10,6 +10,10 @@ const writer = new commonmark.HtmlRenderer();
 console.log("hello from api.js");
 /* GET home page. */
 router.get('/posts/', (req, res, next) => {
+	// console.dir(req.cookies);
+	console.log("API ROUTER Your cookie: " + req.cookies['jwt_token']);
+
+
     // let db_posts = client.db('BlogServer').collection('Posts');
     // db_posts.find().toArray((err, docs) => {
     //     res.json(docs);
@@ -103,6 +107,8 @@ router.post('/posts', (req, res, next) => {
 	    					"body" : body };
 
 	    	db_posts.insertOne(document_to_insert);//TODO, CATCH ERROR 
+
+	    	// res.send("done inserting ");
 	    });
     }
 
@@ -114,7 +120,7 @@ router.post('/posts', (req, res, next) => {
 		db_posts.findOne(find_query).then((post) => {
 	    	if(post==null){
 	    		res.status(404); 
-	    		res.send("No Post Found")
+	    		// res.send("No Post Found")
 	    		console.log("No Post Found");
 	    	}
 
@@ -123,11 +129,11 @@ router.post('/posts', (req, res, next) => {
 	    		let filter = {username: username, postid: postid};
 	    		let update = {$set: {title: title, modified: cur_time,body: body} }
 
-
 			  	db_posts.updateOne(filter, update, function(err, res) {
 				    if (err) throw err;
 				    console.log("1 document updated");
 			  	});
+			  	// res.send("done updating");
 	    	}
 
 	    });		
@@ -149,9 +155,10 @@ module.exports = router;
 
 
 // curl --request DELETE http://localhost:3000/api/posts?username=cs144\&postid=1
+// curl --request GET 
+// curl --request GET http://localhost:3000/api/posts?username=cs144\&postid=1
 
-
-//curl --request POST --header "Content-Type:application/json" --data '{"username":"cs144", "postid": 1 , "title": "updated yourtitle", "body": "updated yourbody"}' http://localhost:3000/api/posts
+//curl --request POST --header "Content-Type:application/json" --data '{"username":"cs144", "postid": 0 , "title": "updated yourtitle", "body": "updated yourbody"}' http://localhost:3000/api/posts
 
 
 
