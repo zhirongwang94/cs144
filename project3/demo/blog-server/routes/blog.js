@@ -58,9 +58,9 @@ router.get('/:username', (req, res) => {
 
         res.render('post', 
             {posts: posts,
-             start: start, 
+             start: start,
+             end: end, 
              next: next,
-             end: end,
         });
         // res.send("username: " + req.params.username);
     });
