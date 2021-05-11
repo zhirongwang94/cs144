@@ -52,10 +52,10 @@ router.get('/:username', (req, res) => {
 
         let next = './';
         if ( parseInt(start)+5 < posts.length ){
-            next = './' + req.params.username + '?start=' + String(parseInt(start) + 5);
+            next = './' +'?start=' + String(parseInt(start) + 5);
         }
         else{
-            next = './' + req.params.username +'?start=' + String(parseInt(start));
+            next = './' +'?start=' + String(parseInt(start));
         }
 
         

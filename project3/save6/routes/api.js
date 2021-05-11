@@ -27,7 +27,6 @@ router.get('/posts/', (req, res, next) => {
     if(username && !postid){
     	console.log("case 1");
 		db_posts.find({username: username}).toArray((err, docs) => {
-			res.status(200); //ok
     		res.json(docs);
 		});
     }
@@ -36,14 +35,12 @@ router.get('/posts/', (req, res, next) => {
     else if(username && postid){
     	console.log("case 2" + "postid: " + postid );
 		db_posts.find({username: username, postid: parseInt(postid)}).toArray((err, docs) => {
-			res.status(200);//ok
     		res.json(docs);
 		});
     }
 
 
     else{
-    	res.status(404);//not found
     	res.send("unkonw query");
     }
     // res.send("Your query username: " + username + "Your query username: " + postid + to_print);
@@ -62,25 +59,12 @@ router.delete('/posts', (req, res, next) => {
     }
 
     let db_posts = client.db('BlogServer').collection('Posts');
-    var delete_query = {username: username, postid: parseInt(postid)};
-	// db_posts.deleteOne(delete_query).then(function(){
-	// 	res.status(202);
-	// 	console.log("Data deleted");
-	// }).catch(function(error){
-	// 	console.log("Data deleted");
-	// 	res.status(404);
-	// });
-
-	db_posts.deleteOne(delete_query).then(function(){
-		res.status(202);
-    	console.log("Data deleted"); // Success
-    	res.send("done");
-	}).catch(function(error){
-		res.status(404);
-	    console.log(error); // Failure
-	    res.send("done");
+    var delete_query = {username: username, postid: parseInt(postid)}
+	db_posts.deleteOne(delete_query, function(err, docs) {
+		if (err) throw err; 
+		console.log("document deleted");
+		res.json(docs);
 	});
-
 });
 
 // case 5: POST /api/posts:
@@ -177,7 +161,7 @@ module.exports = router;
 //curl --request POST --header "Content-Type:application/json" --data '{"username":"cs144", "postid": 0 , "title": "updated yourtitle", "body": "updated yourbody"}' http://localhost:3000/api/posts
 
 
-// curl --request DELETE http://localhost:3000/api/posts?username=cs144\&postid=1 --cookies "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNzMTQ0IiwiaWF0IjoxNjIwNjg5OTYxLCJleHAiOjE2MjA2OTcxNjF9.CpJpURv9T0zJW-QTTOzyVwfqv0SS2pQb_lCNu6HpfmA"
+
 
 // { "postid" : 7, "username" : "user2", "created" : 1518669758380, "modified" : 1518669758380, "title" : "tititletle", "body" : "bobodydy" }
 
