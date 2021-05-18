@@ -11,7 +11,7 @@ function auth(req, res, next){
 	
 	// invalid token - synchronous
 	try {
-	  var payload = jwt.verify(jwt_cookie, jwt_key);
+	  var payload = jwt.verify(jwt_cookie, jwt_key, next());
 	} catch(err) {
 	  console.log("invalid token");
 	}
@@ -19,12 +19,13 @@ function auth(req, res, next){
 	console.log("auth Your cookie: " + jwt);
 	console.log("username : " + username);
 	console.log("payload.username: " + payload.username);
+	console.log("res.body.username: " + req.body.username);
 
-	if(payload.username == req.query.username){
+	if(payload.username == req.query.username ||  payload.username == req.body.username ){
 		next();
 	}else{
-		res.status(401); //Unauthorized
 		console.log("Unauthorized");
+		res.status(401); //Unauthorized
 		res.end("Unauthorized");
 	}
 	

@@ -111,7 +111,7 @@ router.post('/posts', (req, res, next) => {
 	    // obtain the maxid for db
 	    let find_query = {username: username};
 	    db_posts.find(find_query).sort({postid:-1}).limit(1).toArray((err, docs) => {
-	        res.json(docs);
+	        
 	        maxid = docs[0].postid + 1;
 	        console.log("output: "  + maxid);
 
@@ -124,6 +124,7 @@ router.post('/posts', (req, res, next) => {
 
 	    	db_posts.insertOne(document_to_insert);//TODO, CATCH ERROR 
 
+	    	return res.json(docs);
 	    	// res.send("done inserting ");
 	    });
     }
@@ -135,9 +136,10 @@ router.post('/posts', (req, res, next) => {
 		let find_query = {username: username, postid: postid};
 		db_posts.findOne(find_query).then((post) => {
 	    	if(post==null){
-	    		res.status(404); 
-	    		// res.send("No Post Found")
 	    		console.log("No Post Found");
+	    		res.status(404).send("No Post Found");
+	    		// res.send("No Post Found")
+	    		
 	    	}
 
 	    	else{
@@ -148,7 +150,9 @@ router.post('/posts', (req, res, next) => {
 			  	db_posts.updateOne(filter, update, function(err, res) {
 				    if (err) throw err;
 				    console.log("1 document updated");
+				    return res.status(202).send("one document updated");
 			  	});
+
 			  	// res.send("done updating");
 	    	}
 
