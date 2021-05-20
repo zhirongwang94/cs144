@@ -1,56 +1,34 @@
 const jwt = require('jsonwebtoken');
 const jwt_key='C-UFRaksvPKhx1txJYFcut3QGxsafPmwCY6SCly3G6c';
 
-// if the jwt cookie is not included in the HTTP header, 
-// if the included jwt has expired, 
-// or if the username in jwt does not match the username in the path or the body
-// return 401, not authorized 
+
 function auth(req, res, next){
 	console.log("hello from auth.js");
 
+	//now i can access the token 
+	let jwt_cookie = req.cookies['jwt'];
+	let username = req.query.username; 
 	
-	//case1: if the jwt cookie is not icluded in the HTTP header 
-	if(!req.cookies['jwt']){ 
-		console.log("jwt cookie is not included");
+	// invalid token - synchronous
+	try {
+	  var payload = jwt.verify(jwt_cookie, jwt_key);
+	} catch(err) {
+	  console.log("invalid token");
+	}
+
+	console.log("auth Your cookie: " + jwt);
+	console.log("username : " + username);
+	console.log("payload.username: " + payload.username);
+	console.log("res.body.username: " + req.body.username);
+
+	if(payload.username == req.query.username ||  payload.username == req.body.username ){
+		next();
+	}else{
+		console.log("Unauthorized");
 		res.status(401); //Unauthorized
 		res.end("Unauthorized");
 	}
-
-	//case2: verify jwt cookie  
-	else{
-		let jwt_cookie = req.cookies['jwt'];
-
-		// invalid token - synchronous
-		try {
-			var payload = jwt.verify(jwt_cookie, jwt_key);
-			console.log("body: ");
-			console.dir(req.body);
-
-			if(payload.username == req.query.username ||  payload.username == req.body.username ){
-				next();
-			}else{
-				console.log("the username in jwt does not match the username in the path or in the body");
-				res.status(401); //Unauthorized
-				res.end("Unauthorized");
-			}
-
-		} catch(err) {//if the jwt cookie is
-			console.log("invalid jwt token, or the tokem has expired");
-			res.status(401); //Unauthorized
-			res.end("Unauthorized");
-		}
-  
-
-	}
 	
-
-	
-	
-
-
-}
-
-module.exports = auth;
 
 	// res.clearCookie('token');
 	// console.log("Your cookie: " + req.cookies['token']);
@@ -59,3 +37,10 @@ module.exports = auth;
 
 	// 3. JWT.verify(jwt, jwt_key) => payload(json file)
 	// 4. payload.usr==username 
+
+}
+
+module.exports = auth;
+
+
+//curl --request GET --cookie "jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNzMTQ0IiwiaWF0IjoxNjIwNjM1OTM3LCJleHAiOjE2MjA2NDMxMzd9.zL_LtcrmF5J94OWa3GrrRtEsVsW9fR5xaB9Z3pErZmk" http://localhost:3000/api/posts?username=cs144\&postid=1
