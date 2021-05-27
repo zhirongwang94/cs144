@@ -1,0 +1,12 @@
+
+
+<!-- <p>preview worksSSSS!</p> -->
+<!-- <button id="list-new-button" (click)="onNewPost()">New Post </button> -->
+
+<div>
+    <div id="preview-title" >{{post.title}}</div>
+    <div *ngIf='post' id="preview-body">
+        <p>{{post.body}}</p>
+    </div>
+</div>
+<button id="preview-edit-button"  (click)="onEdit()">Edit</button>

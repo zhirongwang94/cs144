@@ -1,0 +1,34 @@
+
+<!-- <p>{{post.postid}}</p> -->
+
+
+
+<!-- <h2>List Works</h2> -->
+<div>
+  <button id="list-new-button" (click)="onNewPost()">New Post</button>
+  <div class="list">
+
+    <div *ngFor="let post of posts" (click)="onSelect(post)" [id]="getElementId(post.postid)" class="item">
+      <span>{{post.title}}</span>
+      <span>{{post.created}}</span>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- <div *ngIf="selectedPost">
+  <h2>Edit Part Working </h2>
+
+  <div><span>title: </span>{{selectedPost.title}}</div>
+  <div><span>Body: </span>{{selectedPost.body}}</div>
+  <div><span>Last Modified: </span>{{selectedPost.Modified}}</div>
+  <div>
+    <label for="post-name">Hero name: </label>
+    <input id="post-name" [value]="selectedPost.name">
+  </div>
+</div> -->
+
+
+<!-- <app-edit [post]="selectedPost"></app-edit> -->

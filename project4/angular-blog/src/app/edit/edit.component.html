@@ -1,0 +1,30 @@
+<!-- <p>edit works!</p>
+ -->
+
+
+<div class="wrapper">
+    <label for="title">Title:
+        <input id="edit-title" type="text" [(ngModel)]='post.title' value={{post.title}}><br><br>
+    </label>
+    
+    <label for="body">Body:
+        <textarea id="edit-body" type="text" [(ngModel)]='post.body' rows="4" cols="50">{{post.body}}</textarea> <br><br>
+    </label>
+
+    <!-- <p>Last Modified {{DataConversion(post.modified)}}</p> -->
+    
+
+    <div class="edit-modified">
+        <span>Last Modified: {{post.modified}}</span>
+    </div>
+
+    <div class="edit-modified">
+        <span>postID: {{post.postid}}</span>
+    </div>
+
+    <div>
+        <button id="edit-save-button" (click)="onSave(post)"> Save</button>
+        <button id="edit-delete-button" (click)="onDelete(post)"> Delete</button>
+        <button id="edit-preview-button" (click)="onPreview(post)"> Preview</button>
+    </div>
+</div>

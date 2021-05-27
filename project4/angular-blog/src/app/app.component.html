@@ -1,0 +1,28 @@
+<!-- <p>App works </p>
+<button (click)="printData()">Print DATA</button> 
+
+
+
+ -->
+<div class="wrapper">
+    <div class="list">
+        <app-list 
+            [posts]="postsToDisplay" 
+            (openPost)="openPostHandler($event);" 
+            (newPost)="newPostHandler();">
+        </app-list>
+    </div>
+
+    <div class="post">
+        <app-edit *ngIf='(appState == 1)'
+            [post]="postToEdit" 
+            (savePost)="savePostHandler($event);" 
+            (deletePost)="deletePostHandler($event);" 
+            (previewPost)="previewPostHandler($event);">
+        </app-edit>
+        <app-preview *ngIf='(appState == 2)'
+             [post]="postToDisplay" 
+             (editPost)="editPostHandler($event);">
+        </app-preview> 
+    </div>
+</div>

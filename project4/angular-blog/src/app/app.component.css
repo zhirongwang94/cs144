@@ -1,0 +1,13 @@
+.list {
+    display: block;
+}
+
+.post {
+    display: block;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-column-gap: 10px;
+}
