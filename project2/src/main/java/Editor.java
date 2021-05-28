@@ -62,7 +62,6 @@ public class Editor extends HttpServlet {
         }
         switch (action) {
             case "list":
-                System.out.println("hello from doGEt list");
                 List<Post> posts = getPosts(username);
                 List<String> names = new ArrayList<String>();
                 List<Integer> ids = new ArrayList<Integer>();
@@ -85,6 +84,7 @@ public class Editor extends HttpServlet {
                 request.getRequestDispatcher("/list.jsp").forward(request, response);
                 break;
             case "open":
+                System.out.println("hello from doGEt open");
                 if (postid <= 0) {
                     title = "";
                     body = "";
@@ -364,31 +364,40 @@ public class Editor extends HttpServlet {
 
     private Post getPost(String username, int postid) {
         Post post = null;
-        if (username == null || username.length() == 0)
-            return post;
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            System.out.println(ex);
+        System.out.println("hello from getPost ");
+        if (username == null || username.length() == 0){
+            System.out.println("hello from getPost return  ");
             return post;
         }
+
+        // try {
+        //     System.out.println("hello from getPost try ");
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // } catch (ClassNotFoundException ex) {
+        //     System.out.println("hello from getPost catch ");
+        //     System.out.println(ex);
+        //     return post;
+        // }
     
         Connection c = null;
-        PreparedStatement s = null;
+        // PreparedStatement s = null;
+        Statement  s = null;
         ResultSet rs = null; 
 
         try {
             /* create an instance of a Connection object */
             c = DriverManager.getConnection("jdbc:mysql://localhost:3306/CS144", "cs144", ""); 
+            s = c.createStatement() ;
+            String query = "SELECT * FROM Posts WHERE username=\"" + username + "\" AND postid=" + postid;
+            System.out.println("query: " + query);
 
-            s = c.prepareStatement(
-                "SELECT * FROM Posts WHERE username = ? AND postid = ?"
-            );
-            s.setString(1, username);
-            s.setInt(2, postid);
+            // s = c.prepareStatement(
+            //     "SELECT * FROM Posts WHERE username = ? AND postid = ?"
+            // );
+            // s.setString(1, username);
+            // s.setInt(2, postid);
 
-            rs = s.executeQuery() ;
+            rs = s.executeQuery(query) ;
             rs.next();
             post = new Post(rs.getString("username"), rs.getInt("postid"), 
                 rs.getString("title"), rs.getString("body"), 
@@ -417,31 +426,16 @@ public class Editor extends HttpServlet {
         if (username == null || username.length() == 0)
             return posts;
 
-        // try {
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // } catch (ClassNotFoundException ex) {
-        //     System.out.println(ex);
-        //     return posts;
-        // }
-    
         Connection c = null;
-        // PreparedStatement s = null;
         Statement  s = null;
         ResultSet rs = null; 
 
         try {
-            System.out.println("hello from doGEt try");
-            /* create an instance of a Connection object */
             c = DriverManager.getConnection("jdbc:mysql://localhost:3306/CS144", "cs144", ""); 
-
             s = c.createStatement() ;
 
-            // s = c.prepareStatement(
-            //     "SELECT * FROM Posts WHERE username = ?"
-            // );
-            // s.setString(1, username);
-
-            rs = s.executeQuery("SELECT * FROM Posts") ;
+            String query = "SELECT * FROM Posts WHERE username=\"" + username + "\""; 
+            rs = s.executeQuery(query) ;
             while( rs.next() ){
                  Post post = new Post(rs.getString("username"), rs.getInt("postid"), 
                     rs.getString("title"), rs.getString("body"), 
