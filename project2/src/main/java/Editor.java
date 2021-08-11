@@ -56,10 +56,11 @@ public class Editor extends HttpServlet {
         String title = request.getParameter("title");
         String body = request.getParameter("body");
         String error = check("GET", action, username, postid, title, body);
-        if (!error.equals("good")) {
-            action = "error";
-            request.setAttribute("error", error);
-        }
+        // if (!error.equals("good")) {
+        //     action = "error";
+        //     request.setAttribute("error", error);
+        // }
+        System.out.println("action is: " + action);
         switch (action) {
             case "list":
                 List<Post> posts = getPosts(username);
@@ -86,16 +87,24 @@ public class Editor extends HttpServlet {
             case "open":
                 System.out.println("hello from doGEt open");
                 if (postid <= 0) {
+                    System.out.println("hello from zerooo ");
                     title = "";
                     body = "";
                 }
-                else if (title == null || body == null) {
+
+                System.out.println("userneame:  " +  username  + " postid: " + postid);
+                // else if (title == null || body == null || title == "" || body == "") {
+                    System.out.println("hello from doGet open");
                     Post post = getPost(username, postid);
                     if (title == null)
                         title = (post == null) ? "" : post.title;
                     if (body == null)
                         body = (post == null) ? "" : post.body;
-                }
+                // }
+                // System.out.println("hello from zerooo else ");
+                System.out.println("hello from doGet done");
+                System.out.println("title: " + title + " body: " + body);
+
                 request.setAttribute("title", title);
                 request.setAttribute("body", body);
                 request.getRequestDispatcher("/edit.jsp").forward(request, response);
@@ -110,6 +119,7 @@ public class Editor extends HttpServlet {
                 request.getRequestDispatcher("/preview.jsp").forward(request, response);
                 break;
             default:
+                System.out.println("hello from doGEt default");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
@@ -123,23 +133,31 @@ public class Editor extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException 
     {
+        System.out.println("hello from doPost");
         String action = request.getParameter("action");
         String username = request.getParameter("username");
         String id_str = request.getParameter("postid");
         int postid = (id_str == null) ? 0 : Integer.parseInt(id_str);
         String title = request.getParameter("title");
         String body = request.getParameter("body");
+        System.out.println("hello before check");
         String error = check("POST", action, username, postid, title, body);
         if (!error.equals("good")) {
             action = "error";
             request.setAttribute("error", error);
         }
+        System.out.println("hello after check");
         switch (action) {
             case "save":
-                if (postid <= 0)
+                System.out.println("hello from doPost save");
+                if (postid <= 0){
+                    System.out.println("hello from doPost open if");
                     addPost(username, title, body);
-                else
+                }
+                else{
+                    System.out.println("hello from doPost open else");
                     updatePost(username, postid, title, body);
+                }
             case "delete":
                 if (action.equals("delete")) {
                     deletePost(username, postid);
@@ -171,6 +189,7 @@ public class Editor extends HttpServlet {
                     title = "";
                     body = "";
                 }
+
                 else if (title == null || body == null) {
                     Post post = getPost(username, postid);
                     if (title == null)
@@ -223,12 +242,12 @@ public class Editor extends HttpServlet {
     }
 
     private void addPost(String username, String title, String body) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            System.out.println(ex);
-            return;
-        }
+        // try {
+        //     Class.forName("com.mysql.jdbc.Driver");
+        // } catch (ClassNotFoundException ex) {
+        //     System.out.println(ex);
+        //     return;
+        // }
     
         Connection c = null;
         PreparedStatement s = null;
@@ -279,13 +298,7 @@ public class Editor extends HttpServlet {
     }
 
     private void updatePost(String username, int postid, String title, String body) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            System.out.println(ex);
-            return;
-        }
-    
+
         Connection c = null;
         PreparedStatement s = null;
         ResultSet rs = null; 
@@ -364,39 +377,29 @@ public class Editor extends HttpServlet {
 
     private Post getPost(String username, int postid) {
         Post post = null;
-        System.out.println("hello from getPost ");
+        System.out.println("hello from getPost");
+
         if (username == null || username.length() == 0){
-            System.out.println("hello from getPost return  ");
+            System.out.println("hello from retrun");
             return post;
         }
+        System.out.println("hello from after retrun");
 
-        // try {
-        //     System.out.println("hello from getPost try ");
-        //     Class.forName("com.mysql.jdbc.Driver");
-        // } catch (ClassNotFoundException ex) {
-        //     System.out.println("hello from getPost catch ");
-        //     System.out.println(ex);
-        //     return post;
-        // }
-    
         Connection c = null;
-        // PreparedStatement s = null;
         Statement  s = null;
         ResultSet rs = null; 
 
         try {
-            /* create an instance of a Connection object */
+            System.out.println("hello from getPost");
+            System.out.println("username: " + username + "postid: " + postid);
+
+
+
             c = DriverManager.getConnection("jdbc:mysql://localhost:3306/CS144", "cs144", ""); 
             s = c.createStatement() ;
             String query = "SELECT * FROM Posts WHERE username=\"" + username + "\" AND postid=" + postid;
-            System.out.println("query: " + query);
 
-            // s = c.prepareStatement(
-            //     "SELECT * FROM Posts WHERE username = ? AND postid = ?"
-            // );
-            // s.setString(1, username);
-            // s.setInt(2, postid);
-
+            System.out.println("query :  " + query);
             rs = s.executeQuery(query) ;
             rs.next();
             post = new Post(rs.getString("username"), rs.getInt("postid"), 
@@ -422,7 +425,6 @@ public class Editor extends HttpServlet {
 
     private List<Post> getPosts(String username) {
         List<Post> posts = new ArrayList<Post>();
-        System.out.println("hello from getPosts");
         if (username == null || username.length() == 0)
             return posts;
 

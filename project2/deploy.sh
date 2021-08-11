@@ -6,6 +6,10 @@ mysql CS144 < create.sql
 # compile java servlet codes and assemble files into build/libs/editor.war
 gradle assemble
 
+# add mock data 
+bash ./mock_data_tomcat.sh
+
+
 # deploy the war file to tomcat
 rm -f $CATALINA_BASE/webapps/editor.war
 cp build/libs/editor.war $CATALINA_BASE/webapps

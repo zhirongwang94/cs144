@@ -7,7 +7,7 @@ class MyUser(HttpUser):
     wait_time = between(1, 2)
 
     @task
-    def readpost(self):
+    def readPost(self):
         postid = randint(1, 500)
         self.client.get('/blog/cs144/' + str(postid))
 
